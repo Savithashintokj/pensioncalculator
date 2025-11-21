@@ -1,76 +1,777 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pension & Savings Calculator</title>
-  <style>
-    :root{--bg:#f7fafc;--card:#ffffff;--muted:#475569;--accent:#0ea5a1}
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:0;padding:20px;background:var(--bg);color:#0f172a}
-    .container{max-width:980px;margin:0 auto;background:var(--card);padding:20px;border-radius:10px;box-shadow:0 6px 20px rgba(2,6,23,0.08)}
-    h1{margin-top:0}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-    label{font-size:13px;display:block;margin-bottom:6px;color:#0f172a}
-    input[type="number"], select{width:100%;padding:10px;border:1px solid #e6edf3;border-radius:8px;font-size:14px}
-    .controls{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
-    button{background:var(--accent);color:white;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600}
-    button:disabled{opacity:0.6}
-    .results{margin-top:18px}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px;border-bottom:1px solid #eef2f7;text-align:right}
-    th{background:#f8fafc;text-align:left;font-weight:700}
-    .note{font-size:13px;color:var(--muted);margin-top:8px}
-    .small{font-size:13px;color:var(--muted)}
-    .row-left{text-align:left}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Pension & Savings Calculator</h1>
-    <p class="small">Enter your current age, retirement age and annual contributions (work pension, ISA, SIPP). The calculator projects future values for three annual return rates (4%, 6%, 8%) and shows totals for each rate.</p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Retirement + Partner Calculator</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      /* Simple, neat, light theme targeted for a 45yo user:
+         - neutral background, clear readable type, larger controls
+         - minimal shadows and no heavy decoration
+         - labels + inputs inline on wider screens, stacked on small screens
+      */
 
-    <div class="grid" aria-hidden="false">
-      <div>
-        <label for="currentAge">Current age</label>
-        <input id="currentAge" type="number" min="0" max="120" value="35" />
-      </div>
-      <div>
-        <label for="retirementAge">Retirement age</label>
-        <input id="retirementAge" type="number" min="1" max="120" value="68" />
-      </div>
+      :root {
+        --bg: #f6f8fb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --text: #0f1724;
+        --primary: #1f6feb;
+        --border: #e6e9ee;
+        --radius: 8px;
+      }
 
-      <div>
-        <label for="workPension">Annual contribution — Workplace pension</label>
-        <input id="workPension" type="number" min="0" step="0.01" value="3000" />
-      </div>
-      <div>
-        <label for="isa">Annual contribution — ISA</label>
-        <input id="isa" type="number" min="0" step="0.01" value="2000" />
-      </div>
-      <div>
-        <label for="sipp">Annual contribution — SIPP</label>
-        <input id="sipp" type="number" min="0" step="0.01" value="1500" />
-      </div>
-      <div>
-        <label for="compounding">Compounding frequency</label>
-        <select id="compounding">
-          <option value="1">Annual</option>
-          <option value="12">Monthly</option>
-        </select>
-      </div>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: Inter, "Segoe UI", Roboto, Arial, system-ui, -apple-system;
+        color: var(--text);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .wrap {
+        max-width: 980px;
+        margin: 28px auto;
+        padding: 20px;
+      }
+
+      header {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      .logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        background: var(--primary);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 20px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 20px;
+      }
+      p.lead {
+        margin: 6px 0 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      /* layout: main column + right sidebar (fixed-ish width) */
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 20px;
+      }
+      @media (max-width: 880px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        box-shadow: 0 4px 10px rgba(16, 24, 40, 0.04);
+      }
+
+      /* Inline label + input rows */
+      .form-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 12px;
+      }
+      .form-row .label {
+        min-width: 200px; /* label column width on larger screens */
+        max-width: 40%;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .form-row .control {
+        flex: 1;
+      }
+
+      /* For very short labels (like 'ISA'), allow a compact label */
+      .form-row.compact .label {
+        min-width: 120px;
+      }
+
+      /* Inputs */
+      input[type="number"],
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 12px 10px;
+        font-size: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text);
+        box-sizing: border-box;
+      }
+      input::placeholder {
+        color: #b8bec9;
+      }
+
+      /* small section headings */
+      h4.small {
+        margin-top: 18px;
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .small {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        background: var(--primary);
+        color: white;
+        font-size: 15px;
+      }
+      button.secondary {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      button[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* tidy little switch line for partner */
+      .checkbox-inline {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      /* summary stats */
+      .summary {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      .stat {
+        background: #fbfdff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px;
+        min-width: 110px;
+      }
+      .stat .label {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .stat .value {
+        font-weight: 700;
+        font-size: 16px;
+        margin-top: 6px;
+        color: var(--text);
+      }
+
+      /* combined vertical list */
+      .combined-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .combined-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px;
+        background: #fff;
+      }
+      .combined-item .rate {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 8px;
+        font-size: 15px;
+      }
+      .combined-item .row-grid {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 6px 12px;
+        align-items: center;
+        font-size: 14px;
+      }
+      .combined-item .label {
+        color: var(--muted);
+      }
+      .combined-item .value {
+        font-weight: 700;
+        color: var(--text);
+        text-align: right;
+      }
+      .combined-item .total-value {
+        margin-top: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .combined-item .total-value .label {
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .combined-item .total-value .value {
+        font-size: 16px;
+        color: var(--text);
+      }
+
+      aside > .card {
+        margin-bottom: 12px;
+      }
+
+      /* per-person vertical results (restores individual's projection UI) */
+      .person-results {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .person-result-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px;
+        background: #fff;
+      }
+      .person-result-item .rate {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .person-result-item .grid {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 6px 12px;
+        align-items: center;
+        font-size: 14px;
+      }
+      .person-result-item .total {
+        margin-top: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .person-result-item .total .value {
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--text);
+      }
+
+      @media (max-width: 680px) {
+        .form-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .form-row .label {
+          min-width: 0;
+          max-width: 100%;
+          width: 100%;
+        }
+        .form-row .control {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="logo">RP</div>
+        <div>
+          <h1>Retirement + Partner Calculator</h1>
+          <p class="lead">
+            Simple projections for Retirement, ISA and SIPP. Choose to add a
+            partner and combine totals.
+          </p>
+        </div>
+      </header>
+
+      <div id="root"></div>
     </div>
 
-    <div class="controls">
-      <button id="calc">Calculate projections</button>
-      <button id="reset" type="button">Reset</button>
-      <div style="align-self:center;color:var(--muted);font-size:13px">Results assume end-of-period contributions.</div>
-    </div>
+    <!-- React + Babel (demo) -->
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <div id="output" class="results" aria-live="polite"></div>
+    <script type="text/babel">
+      const { useState } = React;
 
-    <p class="note">This is a simple projection. It does not account for inflation, taxes, fees, employer matching, limits, or future changes in contributions.</p>
-  </div>
+      function toNum(v) {
+        const n = parseFloat(String(v).replace(/,/g, ""));
+        return Number.isFinite(n) ? n : 0;
+      }
 
-  <script src="pensioncalculator.js"></script>
-</body>
+      function fvLump(initial, rate, years) {
+        return initial * Math.pow(1 + rate, years);
+      }
+
+      function fvSeries(annualContribution, rate, years) {
+        if (years <= 0) return 0;
+        if (rate === 0) return annualContribution * years;
+        return (annualContribution * (Math.pow(1 + rate, years) - 1)) / rate;
+      }
+
+      function calculatePerson(person, rates) {
+        const years = Math.max(
+          0,
+          Math.floor(toNum(person.yearsUntilRetirement))
+        );
+        const results = rates.map((r) => {
+          const retirementFV =
+            fvLump(toNum(person.retirement.initial), r, years) +
+            fvSeries(toNum(person.retirement.annual), r, years);
+          const isaFV =
+            fvLump(toNum(person.isa.initial), r, years) +
+            fvSeries(toNum(person.isa.annual), r, years);
+          const sippFV =
+            fvLump(toNum(person.sipp.initial), r, years) +
+            fvSeries(toNum(person.sipp.annual), r, years);
+          const total = retirementFV + isaFV + sippFV;
+          return {
+            rate: r,
+            retirementFV,
+            isaFV,
+            sippFV,
+            total,
+          };
+        });
+        return { years, results };
+      }
+
+      function Money({ value }) {
+        return (value || 0).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      }
+
+      // empty string values so fields feel empty (click replaces placeholder)
+      const emptyPerson = {
+        yearsUntilRetirement: "",
+        retirement: { initial: "", annual: "" },
+        isa: { initial: "", annual: "" },
+        sipp: { initial: "", annual: "" },
+      };
+
+      function PersonForm({ title, person, onChange, onCalculate, results }) {
+        // helper to update nested values while keeping them as strings for inputs
+        const setField = (path, value) => {
+          const next = JSON.parse(JSON.stringify(person));
+          const keys = path.split(".");
+          let cur = next;
+          while (keys.length > 1) {
+            cur = cur[keys.shift()];
+          }
+          cur[keys[0]] = value;
+          onChange(next);
+        };
+
+        return (
+          <div className="card" aria-label={title}>
+            <h3 style={{ margin: 0 }}>{title}</h3>
+
+            <div className="form-row">
+              <div className="label">Years until retirement</div>
+              <div className="control">
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="20"
+                  value={person.yearsUntilRetirement}
+                  onChange={(e) =>
+                    setField("yearsUntilRetirement", e.target.value)
+                  }
+                />
+              </div>
+            </div>
+
+            <h4 className="small">Retirement</h4>
+
+            <div className="form-row">
+              <div className="label">Current balance</div>
+              <div className="control">
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  value={person.retirement.initial}
+                  onChange={(e) =>
+                    setField("retirement.initial", e.target.value)
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="label">Annual contribution</div>
+              <div className="control">
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  value={person.retirement.annual}
+                  onChange={(e) =>
+                    setField("retirement.annual", e.target.value)
+                  }
+                />
+              </div>
+            </div>
+
+            <h4 className="small">ISA</h4>
+
+            <div className="form-row compact">
+              <div className="label">Current balance</div>
+              <div className="control">
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  value={person.isa.initial}
+                  onChange={(e) => setField("isa.initial", e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="form-row compact">
+              <div className="label">Annual contribution</div>
+              <div className="control">
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  value={person.isa.annual}
+                  onChange={(e) => setField("isa.annual", e.target.value)}
+                />
+              </div>
+            </div>
+
+            <h4 className="small">SIPP</h4>
+
+            <div className="form-row compact">
+              <div className="label">Current balance</div>
+              <div className="control">
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  value={person.sipp.initial}
+                  onChange={(e) => setField("sipp.initial", e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="form-row compact">
+              <div className="label">Annual contribution</div>
+              <div className="control">
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  value={person.sipp.annual}
+                  onChange={(e) => setField("sipp.annual", e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="row" style={{ marginTop: 16 }}>
+              <button onClick={() => onCalculate()}>Calculate</button>
+              <button
+                className="secondary"
+                onClick={() =>
+                  onChange(JSON.parse(JSON.stringify(emptyPerson)))
+                }
+                type="button"
+              >
+                Reset person
+              </button>
+            </div>
+
+            {/* RESTORED: individual person's vertical results (was missing) */}
+            {results && (
+              <div className="person-results" aria-live="polite">
+                <div style={{ fontSize: 13, color: "var(--muted)" }}>
+                  Projections for <strong>{results.years}</strong> years
+                </div>
+
+                {results.results.map((r) => (
+                  <div className="person-result-item" key={r.rate}>
+                    <div className="rate">
+                      {(r.rate * 100).toFixed(0)}% projection
+                    </div>
+
+                    <div className="grid">
+                      <div className="label">Retirement</div>
+                      <div className="value">
+                        £{(r.retirementFV || 0).toLocaleString()}
+                      </div>
+
+                      <div className="label">ISA</div>
+                      <div className="value">
+                        £{(r.isaFV || 0).toLocaleString()}
+                      </div>
+
+                      <div className="label">SIPP</div>
+                      <div className="value">
+                        £{(r.sippFV || 0).toLocaleString()}
+                      </div>
+                    </div>
+
+                    <div className="total">
+                      <div className="label">Total</div>
+                      <div className="value">
+                        £{(r.total || 0).toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      function App() {
+        const rates = [0.04, 0.06, 0.08];
+
+        const [person1, setPerson1] = useState(
+          JSON.parse(JSON.stringify(emptyPerson))
+        );
+        const [person2, setPerson2] = useState(
+          JSON.parse(JSON.stringify(emptyPerson))
+        );
+        const [hasPartner, setHasPartner] = useState(false);
+
+        const [res1, setRes1] = useState(null);
+        const [res2, setRes2] = useState(null);
+        const [combined, setCombined] = useState(null);
+
+        function calc1() {
+          const r = calculatePerson(person1, rates);
+          setRes1(r);
+          setCombined(null);
+        }
+
+        function calc2() {
+          const r = calculatePerson(person2, rates);
+          setRes2(r);
+          setCombined(null);
+        }
+
+        function totalBoth() {
+          const a = res1 || calculatePerson(person1, rates);
+          const b = res2 || calculatePerson(person2, rates);
+          const summed = a.results.map((ar, idx) => {
+            const br = b.results[idx];
+            return {
+              rate: ar.rate,
+              retirementFV: ar.retirementFV + br.retirementFV,
+              isaFV: ar.isaFV + br.isaFV,
+              sippFV: ar.sippFV + br.sippFV,
+              total: ar.total + br.total,
+            };
+          });
+          setCombined({ years: `${a.years} / ${b.years}`, results: summed });
+        }
+
+        return (
+          <div className="layout">
+            <div>
+              <PersonForm
+                title="Person 1"
+                person={person1}
+                onChange={setPerson1}
+                onCalculate={calc1}
+                results={res1}
+              />
+
+              <div style={{ marginTop: 16 }} className="card">
+                <h3 style={{ margin: 0 }}>Partner</h3>
+                <div className="checkbox-inline">
+                  <input
+                    id="partner"
+                    type="checkbox"
+                    checked={hasPartner}
+                    onChange={(e) => setHasPartner(e.target.checked)}
+                  />
+                  <label
+                    htmlFor="partner"
+                    className="muted"
+                    style={{ margin: 0 }}
+                  >
+                    Add partner
+                  </label>
+                </div>
+
+                {!hasPartner ? (
+                  <p className="muted" style={{ marginTop: 12 }}>
+                    Partner not added. Toggle the checkbox to add a partner.
+                  </p>
+                ) : (
+                  <div style={{ marginTop: 12 }}>
+                    <PersonForm
+                      title="Person 2"
+                      person={person2}
+                      onChange={setPerson2}
+                      onCalculate={calc2}
+                      results={res2}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <aside>
+              <div className="card">
+                <h3 style={{ margin: 0 }}>Totals</h3>
+
+                <div className="row" style={{ marginTop: 12 }}>
+                  <button onClick={totalBoth} disabled={!hasPartner}>
+                    Total Both People
+                  </button>
+                  <button
+                    className="secondary"
+                    onClick={() => {
+                      setPerson1(JSON.parse(JSON.stringify(emptyPerson)));
+                      setPerson2(JSON.parse(JSON.stringify(emptyPerson)));
+                      setRes1(null);
+                      setRes2(null);
+                      setCombined(null);
+                      setHasPartner(false);
+                    }}
+                  >
+                    Reset All
+                  </button>
+                </div>
+
+                {!hasPartner && (
+                  <p className="muted" style={{ marginTop: 12 }}>
+                    Add partner to enable the combined total.
+                  </p>
+                )}
+
+                {/* NEW: vertical presentation instead of table */}
+                {combined && (
+                  <div className="combined-list" aria-live="polite">
+                    <div style={{ fontSize: 13, color: "var(--muted)" }}>
+                      Combined totals{" "}
+                      <span style={{ color: "var(--muted)", fontWeight: 600 }}>
+                        ({combined.years})
+                      </span>
+                    </div>
+
+                    {combined.results.map((r) => (
+                      <div className="combined-item" key={r.rate}>
+                        <div className="rate">
+                          {(r.rate * 100).toFixed(0)}% projection
+                        </div>
+
+                        <div className="row-grid" style={{ marginBottom: 4 }}>
+                          <div className="label">Retirement</div>
+                          <div className="value">
+                            £{(r.retirementFV || 0).toLocaleString()}
+                          </div>
+
+                          <div className="label">ISA</div>
+                          <div className="value">
+                            £{(r.isaFV || 0).toLocaleString()}
+                          </div>
+
+                          <div className="label">SIPP</div>
+                          <div className="value">
+                            £{(r.sippFV || 0).toLocaleString()}
+                          </div>
+                        </div>
+
+                        <div className="total-value">
+                          <div className="label">Total</div>
+                          <div className="value total-value-number">
+                            £{(r.total || 0).toLocaleString()}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    <div className="summary" style={{ marginTop: 6 }}>
+                      <div className="stat">
+                        <div className="label">Best (8%)</div>
+                        <div className="value">
+                          £{(combined.results[2].total || 0).toLocaleString()}
+                        </div>
+                      </div>
+                      <div className="stat">
+                        <div className="label">Mid (6%)</div>
+                        <div className="value">
+                          £{(combined.results[1].total || 0).toLocaleString()}
+                        </div>
+                      </div>
+                      <div className="stat">
+                        <div className="label">Conservative (4%)</div>
+                        <div className="value">
+                          £{(combined.results[0].total || 0).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="card" style={{ marginTop: 12 }}>
+                <h3 style={{ margin: 0 }}>Notes</h3>
+                <p className="muted" style={{ marginTop: 8 }}>
+                  - Inputs are intentionally blank and show a light placeholder
+                  (click to type).
+                  <br />- Calculations treat empty or invalid input as 0. Use
+                  the Calculate button after editing.
+                </p>
+              </div>
+            </aside>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
 </html>
