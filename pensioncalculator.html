@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pension & Savings Calculator</title>
+  <style>
+    :root{--bg:#f7fafc;--card:#ffffff;--muted:#475569;--accent:#0ea5a1}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:0;padding:20px;background:var(--bg);color:#0f172a}
+    .container{max-width:980px;margin:0 auto;background:var(--card);padding:20px;border-radius:10px;box-shadow:0 6px 20px rgba(2,6,23,0.08)}
+    h1{margin-top:0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    label{font-size:13px;display:block;margin-bottom:6px;color:#0f172a}
+    input[type="number"], select{width:100%;padding:10px;border:1px solid #e6edf3;border-radius:8px;font-size:14px}
+    .controls{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+    button{background:var(--accent);color:white;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600}
+    button:disabled{opacity:0.6}
+    .results{margin-top:18px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #eef2f7;text-align:right}
+    th{background:#f8fafc;text-align:left;font-weight:700}
+    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    .small{font-size:13px;color:var(--muted)}
+    .row-left{text-align:left}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pension & Savings Calculator</h1>
+    <p class="small">Enter your current age, retirement age and annual contributions (work pension, ISA, SIPP). The calculator projects future values for three annual return rates (4%, 6%, 8%) and shows totals for each rate.</p>
+
+    <div class="grid" aria-hidden="false">
+      <div>
+        <label for="currentAge">Current age</label>
+        <input id="currentAge" type="number" min="0" max="120" value="35" />
+      </div>
+      <div>
+        <label for="retirementAge">Retirement age</label>
+        <input id="retirementAge" type="number" min="1" max="120" value="68" />
+      </div>
+
+      <div>
+        <label for="workPension">Annual contribution — Workplace pension</label>
+        <input id="workPension" type="number" min="0" step="0.01" value="3000" />
+      </div>
+      <div>
+        <label for="isa">Annual contribution — ISA</label>
+        <input id="isa" type="number" min="0" step="0.01" value="2000" />
+      </div>
+      <div>
+        <label for="sipp">Annual contribution — SIPP</label>
+        <input id="sipp" type="number" min="0" step="0.01" value="1500" />
+      </div>
+      <div>
+        <label for="compounding">Compounding frequency</label>
+        <select id="compounding">
+          <option value="1">Annual</option>
+          <option value="12">Monthly</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="calc">Calculate projections</button>
+      <button id="reset" type="button">Reset</button>
+      <div style="align-self:center;color:var(--muted);font-size:13px">Results assume end-of-period contributions.</div>
+    </div>
+
+    <div id="output" class="results" aria-live="polite"></div>
+
+    <p class="note">This is a simple projection. It does not account for inflation, taxes, fees, employer matching, limits, or future changes in contributions.</p>
+  </div>
+
+  <script src="pensioncalculator.js"></script>
+</body>
+</html>
