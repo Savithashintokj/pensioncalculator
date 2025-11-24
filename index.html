@@ -5,12 +5,6 @@
     <title>Retirement + Partner Calculator</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
-      /* Simple, neat, light theme targeted for a 45yo user:
-         - neutral background, clear readable type, larger controls
-         - minimal shadows and no heavy decoration
-         - labels + inputs inline on wider screens, stacked on small screens
-      */
-
       :root {
         --bg: #f6f8fb;
         --card: #ffffff;
@@ -35,86 +29,81 @@
       .wrap {
         max-width: 980px;
         margin: 28px auto;
-        padding: 20px;
+        padding: 12px;
       }
 
       header {
         display: flex;
-        gap: 16px;
+        gap: 12px;
         align-items: center;
-        margin-bottom: 18px;
+        margin-bottom: 12px;
       }
+
       .logo {
-        width: 56px;
-        height: 56px;
+        width: 44px;
+        height: 44px;
         border-radius: 10px;
         background: var(--primary);
         color: #fff;
         display: grid;
         place-items: center;
         font-weight: 700;
-        font-size: 20px;
+        font-size: 18px;
       }
+
       h1 {
         margin: 0;
-        font-size: 20px;
+        font-size: 18px;
       }
       p.lead {
         margin: 6px 0 0 0;
         color: var(--muted);
-        font-size: 14px;
+        font-size: 13px;
       }
 
-      /* layout: main column + right sidebar (fixed-ish width) */
       .layout {
         display: grid;
-        grid-template-columns: 1fr 360px;
-        gap: 20px;
+        grid-template-columns: 1fr 340px;
+        gap: 10px;
       }
       @media (max-width: 880px) {
         .layout {
           grid-template-columns: 1fr;
         }
       }
-
       .card {
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: var(--radius);
-        padding: 16px;
-        box-shadow: 0 4px 10px rgba(16, 24, 40, 0.04);
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(16, 24, 40, 0.03);
       }
-
-      /* Inline label + input rows */
       .form-row {
         display: flex;
         align-items: center;
-        gap: 16px;
-        margin-top: 12px;
+        gap: 8px;
+        margin-top: 6px;
+        margin-bottom: 2px;
       }
       .form-row .label {
-        min-width: 200px; /* label column width on larger screens */
-        max-width: 40%;
+        min-width: 100px;
+        font-size: 12px;
         color: var(--muted);
-        font-size: 13px;
+        padding-right: 3px;
       }
       .form-row .control {
         flex: 1;
       }
-
-      /* For very short labels (like 'ISA'), allow a compact label */
       .form-row.compact .label {
-        min-width: 120px;
+        min-width: 80px;
       }
-
-      /* Inputs */
       input[type="number"],
       input[type="text"],
       select {
         width: 100%;
-        padding: 12px 10px;
-        font-size: 15px;
-        border-radius: 8px;
+        padding: 7px 8px;
+        font-size: 14px;
+        border-radius: 6px;
         border: 1px solid var(--border);
         background: #fff;
         color: var(--text);
@@ -123,36 +112,31 @@
       input::placeholder {
         color: #b8bec9;
       }
-
-      /* small section headings */
       h4.small {
-        margin-top: 18px;
-        margin-bottom: 6px;
-        font-size: 13px;
+        margin-top: 10px;
+        margin-bottom: 4px;
+        font-size: 12px;
         color: var(--muted);
       }
-
       .small {
-        font-size: 13px;
+        font-size: 12px;
         color: var(--muted);
       }
-
       .row {
         display: flex;
-        gap: 10px;
-        margin-top: 12px;
+        gap: 6px;
+        margin-top: 8px;
         flex-wrap: wrap;
       }
-
       button {
-        padding: 10px 14px;
-        border-radius: 8px;
+        padding: 8px 10px;
+        border-radius: 6px;
         border: none;
         font-weight: 600;
         cursor: pointer;
         background: var(--primary);
         color: white;
-        font-size: 15px;
+        font-size: 14px;
       }
       button.secondary {
         background: transparent;
@@ -163,81 +147,69 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
-
       .muted {
         color: var(--muted);
-        font-size: 13px;
+        font-size: 12px;
       }
-
-      /* tidy little switch line for partner */
       .checkbox-inline {
         display: flex;
         align-items: center;
         gap: 8px;
-        margin-top: 8px;
+        margin-top: 4px;
       }
-
-      /* summary stats */
       .summary {
         display: flex;
-        gap: 10px;
-        margin-top: 12px;
+        gap: 6px;
+        margin-top: 8px;
         flex-wrap: wrap;
       }
       .stat {
         background: #fbfdff;
         border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 10px;
-        min-width: 110px;
+        border-radius: 6px;
+        padding: 7px;
+        min-width: 90px;
       }
       .stat .label {
         color: var(--muted);
-        font-size: 13px;
+        font-size: 12px;
       }
       .stat .value {
         font-weight: 700;
-        font-size: 16px;
-        margin-top: 6px;
+        font-size: 15px;
+        margin-top: 2px;
         color: var(--text);
       }
-
-      /* combined vertical list */
       .combined-list {
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        margin-top: 12px;
+        gap: 7px;
+        margin-top: 7px;
       }
       .combined-item {
         border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 12px;
+        border-radius: 6px;
+        padding: 7px;
         background: #fff;
       }
       .combined-item .rate {
         font-weight: 700;
         color: var(--text);
-        margin-bottom: 8px;
-        font-size: 15px;
+        margin-bottom: 5px;
+        font-size: 14px;
       }
       .combined-item .row-grid {
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 6px 12px;
+        gap: 3px 8px;
         align-items: center;
-        font-size: 14px;
+        font-size: 12px;
       }
       .combined-item .label {
         color: var(--muted);
       }
-      .combined-item .value {
-        font-weight: 700;
-        color: var(--text);
-        text-align: right;
-      }
       .combined-item .total-value {
-        margin-top: 8px;
+        margin-top: 3px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -247,64 +219,112 @@
         font-weight: 600;
       }
       .combined-item .total-value .value {
-        font-size: 16px;
+        font-size: 15px;
         color: var(--text);
       }
-
       aside > .card {
-        margin-bottom: 12px;
+        margin-bottom: 8px;
       }
-
-      /* per-person vertical results (restores individual's projection UI) */
       .person-results {
-        margin-top: 12px;
+        margin-top: 7px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 6px;
       }
       .person-result-item {
         border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 10px;
+        border-radius: 6px;
+        padding: 7px;
         background: #fff;
       }
       .person-result-item .rate {
         font-weight: 700;
         color: var(--text);
-        margin-bottom: 6px;
+        margin-bottom: 3px;
       }
       .person-result-item .grid {
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 6px 12px;
+        gap: 3px 8px;
         align-items: center;
-        font-size: 14px;
+        font-size: 12px;
       }
       .person-result-item .total {
-        margin-top: 8px;
+        margin-top: 4px;
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
       .person-result-item .total .value {
         font-weight: 700;
-        font-size: 15px;
+        font-size: 14px;
         color: var(--text);
       }
-
-      @media (max-width: 680px) {
-        .form-row {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        .form-row .label {
-          min-width: 0;
-          max-width: 100%;
-          width: 100%;
-        }
-        .form-row .control {
-          width: 100%;
-        }
+      .person-result-item .extra-expense-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 3px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .person-result-item .leftover-positive {
+        color: #228b22;
+        font-weight: bold;
+      }
+      .person-result-item .leftover-negative {
+        color: #c92a2a;
+        font-weight: bold;
+      }
+      /* Custom style for highlights after combined-list, after each person section */
+      .retirement-expense-highlights {
+        margin-top: 16px;
+        margin-bottom: 2px;
+        padding: 15px 18px 11px 18px;
+        background: #fdf6ec;
+        border: 1.5px solid #f5c186;
+        border-radius: 10px;
+        font-size: 17px;
+        font-family: "Segoe UI", Inter, Roboto, Arial, sans-serif;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: 0 2px 8px rgba(233, 146, 67, 0.06);
+      }
+      .retirement-expense-highlights .expense-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .retirement-expense-highlights .expense-label {
+        color: #aa6200;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+      .retirement-expense-highlights .expense-value {
+        color: #f08a24;
+        font-size: 21px;
+        font-weight: 800;
+        letter-spacing: 0.005em;
+        text-shadow: 0 0.5px 0 #ffe0b2;
+      }
+      .retirement-expense-highlights .leftover-label {
+        color: #332900;
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .retirement-expense-highlights .leftover-value {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0.005em;
+        text-shadow: 0 0.5px 0 #fff;
+      }
+      .retirement-expense-highlights .leftover-positive {
+        color: #228b22;
+      }
+      .retirement-expense-highlights .leftover-negative {
+        color: #d62828;
       }
     </style>
   </head>
@@ -324,7 +344,7 @@
       <div id="root"></div>
     </div>
 
-    <!-- React + Babel (demo) -->
+    <!-- React + Babel -->
     <script
       crossorigin
       src="https://unpkg.com/react@18/umd/react.development.js"
@@ -354,30 +374,41 @@
       }
 
       function calculatePerson(person, rates) {
-        const years = Math.max(
+        const currentAge = toNum(person.currentAge);
+        const retirementAge = toNum(person.retirementAge);
+        const yearsUntilRetirement = Math.max(
           0,
-          Math.floor(toNum(person.yearsUntilRetirement))
+          Math.floor(retirementAge - currentAge)
         );
+        const expenseYears = toNum(person.retirementExpenseYears);
+        const monthlyExpense = toNum(person.retirementMonthlyExpense);
+        const totalRetirementExpense = monthlyExpense * 12 * expenseYears;
+
         const results = rates.map((r) => {
           const retirementFV =
-            fvLump(toNum(person.retirement.initial), r, years) +
-            fvSeries(toNum(person.retirement.annual), r, years);
+            fvLump(toNum(person.retirement.initial), r, yearsUntilRetirement) +
+            fvSeries(toNum(person.retirement.annual), r, yearsUntilRetirement);
           const isaFV =
-            fvLump(toNum(person.isa.initial), r, years) +
-            fvSeries(toNum(person.isa.annual), r, years);
+            fvLump(toNum(person.isa.initial), r, yearsUntilRetirement) +
+            fvSeries(toNum(person.isa.annual), r, yearsUntilRetirement);
           const sippFV =
-            fvLump(toNum(person.sipp.initial), r, years) +
-            fvSeries(toNum(person.sipp.annual), r, years);
+            fvLump(toNum(person.sipp.initial), r, yearsUntilRetirement) +
+            fvSeries(toNum(person.sipp.annual), r, yearsUntilRetirement);
           const total = retirementFV + isaFV + sippFV;
+          const leftOver = total - totalRetirementExpense;
           return {
             rate: r,
             retirementFV,
             isaFV,
             sippFV,
             total,
+            totalRetirementExpense,
+            leftOver,
+            expenseYears,
+            monthlyExpense,
           };
         });
-        return { years, results };
+        return { years: yearsUntilRetirement, results };
       }
 
       function Money({ value }) {
@@ -387,16 +418,17 @@
         });
       }
 
-      // empty string values so fields feel empty (click replaces placeholder)
       const emptyPerson = {
-        yearsUntilRetirement: "",
+        currentAge: "",
+        retirementAge: "",
+        retirementMonthlyExpense: "",
+        retirementExpenseYears: "",
         retirement: { initial: "", annual: "" },
         isa: { initial: "", annual: "" },
         sipp: { initial: "", annual: "" },
       };
 
       function PersonForm({ title, person, onChange, onCalculate, results }) {
-        // helper to update nested values while keeping them as strings for inputs
         const setField = (path, value) => {
           const next = JSON.parse(JSON.stringify(person));
           const keys = path.split(".");
@@ -408,167 +440,290 @@
           onChange(next);
         };
 
+        const showYears =
+          person.currentAge &&
+          person.retirementAge &&
+          toNum(person.retirementAge) > toNum(person.currentAge);
+
+        // best projection is results?.results[2]
+        const best =
+          results && results.results && results.results.length === 3
+            ? results.results[2]
+            : null;
+
+        const showExpenseHighlight =
+          best &&
+          best.totalRetirementExpense > 0 &&
+          best.expenseYears > 0 &&
+          best.monthlyExpense > 0;
+
         return (
-          <div className="card" aria-label={title}>
-            <h3 style={{ margin: 0 }}>{title}</h3>
+          <>
+            <div className="card" aria-label={title}>
+              <h3 style={{ margin: 0 }}>{title}</h3>
 
-            <div className="form-row">
-              <div className="label">Years until retirement</div>
-              <div className="control">
-                <input
-                  type="number"
-                  min="0"
-                  placeholder="20"
-                  value={person.yearsUntilRetirement}
-                  onChange={(e) =>
-                    setField("yearsUntilRetirement", e.target.value)
-                  }
-                />
-              </div>
-            </div>
-
-            <h4 className="small">Retirement</h4>
-
-            <div className="form-row">
-              <div className="label">Current balance</div>
-              <div className="control">
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="0.00"
-                  value={person.retirement.initial}
-                  onChange={(e) =>
-                    setField("retirement.initial", e.target.value)
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="label">Annual contribution</div>
-              <div className="control">
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="0.00"
-                  value={person.retirement.annual}
-                  onChange={(e) =>
-                    setField("retirement.annual", e.target.value)
-                  }
-                />
-              </div>
-            </div>
-
-            <h4 className="small">ISA</h4>
-
-            <div className="form-row compact">
-              <div className="label">Current balance</div>
-              <div className="control">
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="0.00"
-                  value={person.isa.initial}
-                  onChange={(e) => setField("isa.initial", e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="form-row compact">
-              <div className="label">Annual contribution</div>
-              <div className="control">
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="0.00"
-                  value={person.isa.annual}
-                  onChange={(e) => setField("isa.annual", e.target.value)}
-                />
-              </div>
-            </div>
-
-            <h4 className="small">SIPP</h4>
-
-            <div className="form-row compact">
-              <div className="label">Current balance</div>
-              <div className="control">
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="0.00"
-                  value={person.sipp.initial}
-                  onChange={(e) => setField("sipp.initial", e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="form-row compact">
-              <div className="label">Annual contribution</div>
-              <div className="control">
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="0.00"
-                  value={person.sipp.annual}
-                  onChange={(e) => setField("sipp.annual", e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="row" style={{ marginTop: 16 }}>
-              <button onClick={() => onCalculate()}>Calculate</button>
-              <button
-                className="secondary"
-                onClick={() =>
-                  onChange(JSON.parse(JSON.stringify(emptyPerson)))
-                }
-                type="button"
-              >
-                Reset person
-              </button>
-            </div>
-
-            {/* RESTORED: individual person's vertical results (was missing) */}
-            {results && (
-              <div className="person-results" aria-live="polite">
-                <div style={{ fontSize: 13, color: "var(--muted)" }}>
-                  Projections for <strong>{results.years}</strong> years
+              <div className="form-row">
+                <div className="label">Current age</div>
+                <div className="control" style={{ maxWidth: 80 }}>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="45"
+                    value={person.currentAge}
+                    onChange={(e) => setField("currentAge", e.target.value)}
+                  />
                 </div>
+                <div className="label">Retirement age</div>
+                <div className="control" style={{ maxWidth: 80 }}>
+                  <input
+                    type="number"
+                    min={toNum(person.currentAge) + 1}
+                    placeholder="65"
+                    value={person.retirementAge}
+                    onChange={(e) => setField("retirementAge", e.target.value)}
+                  />
+                </div>
+                {showYears && (
+                  <span className="small muted" style={{ paddingLeft: 12 }}>
+                    Years:{" "}
+                    <b>
+                      {toNum(person.retirementAge) - toNum(person.currentAge)}
+                    </b>
+                  </span>
+                )}
+              </div>
 
-                {results.results.map((r) => (
-                  <div className="person-result-item" key={r.rate}>
-                    <div className="rate">
-                      {(r.rate * 100).toFixed(0)}% projection
-                    </div>
+              {!showYears && person.currentAge && person.retirementAge && (
+                <div
+                  className="small muted"
+                  style={{ marginBottom: 3, color: "red" }}
+                >
+                  Retirement age should be greater than current age.
+                </div>
+              )}
 
-                    <div className="grid">
-                      <div className="label">Retirement</div>
-                      <div className="value">
-                        £{(r.retirementFV || 0).toLocaleString()}
-                      </div>
+              <h4 className="small">Retirement Expense</h4>
+              <div className="form-row compact">
+                <div className="label">Monthly expected expense</div>
+                <div className="control">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="1200"
+                    value={person.retirementMonthlyExpense}
+                    onChange={(e) =>
+                      setField("retirementMonthlyExpense", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="label">No. of years</div>
+                <div className="control">
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="25"
+                    value={person.retirementExpenseYears}
+                    onChange={(e) =>
+                      setField("retirementExpenseYears", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
 
-                      <div className="label">ISA</div>
-                      <div className="value">
-                        £{(r.isaFV || 0).toLocaleString()}
-                      </div>
+              <h4 className="small">Retirement</h4>
+              <div className="form-row compact">
+                <div className="label">Current balance</div>
+                <div className="control">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    value={person.retirement.initial}
+                    onChange={(e) =>
+                      setField("retirement.initial", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="label">Annual contribution</div>
+                <div className="control">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    value={person.retirement.annual}
+                    onChange={(e) =>
+                      setField("retirement.annual", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
 
-                      <div className="label">SIPP</div>
-                      <div className="value">
-                        £{(r.sippFV || 0).toLocaleString()}
-                      </div>
-                    </div>
+              <h4 className="small">ISA</h4>
+              <div className="form-row compact">
+                <div className="label">Current balance</div>
+                <div className="control">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    value={person.isa.initial}
+                    onChange={(e) => setField("isa.initial", e.target.value)}
+                  />
+                </div>
+                <div className="label">Annual contribution</div>
+                <div className="control">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    value={person.isa.annual}
+                    onChange={(e) => setField("isa.annual", e.target.value)}
+                  />
+                </div>
+              </div>
 
-                    <div className="total">
-                      <div className="label">Total</div>
-                      <div className="value">
-                        £{(r.total || 0).toLocaleString()}
-                      </div>
-                    </div>
+              <h4 className="small">SIPP</h4>
+              <div className="form-row compact">
+                <div className="label">Current balance</div>
+                <div className="control">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    value={person.sipp.initial}
+                    onChange={(e) => setField("sipp.initial", e.target.value)}
+                  />
+                </div>
+                <div className="label">Annual contribution</div>
+                <div className="control">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    value={person.sipp.annual}
+                    onChange={(e) => setField("sipp.annual", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="row" style={{ marginTop: 8 }}>
+                <button
+                  onClick={() => {
+                    if (
+                      toNum(person.retirementAge) > toNum(person.currentAge)
+                    ) {
+                      onCalculate();
+                    }
+                  }}
+                >
+                  Calculate
+                </button>
+                <button
+                  className="secondary"
+                  onClick={() =>
+                    onChange(JSON.parse(JSON.stringify(emptyPerson)))
+                  }
+                  type="button"
+                >
+                  Reset person
+                </button>
+              </div>
+
+              {results && (
+                <div className="person-results" aria-live="polite">
+                  <div style={{ fontSize: 12, color: "var(--muted)" }}>
+                    Projections for <strong>{results.years}</strong> years
                   </div>
-                ))}
+                  {results.results.map((r) => (
+                    <div className="person-result-item" key={r.rate}>
+                      <div className="rate">
+                        {(r.rate * 100).toFixed(0)}% projection
+                      </div>
+                      <div className="grid">
+                        <div className="label">Retirement</div>
+                        <div className="value">
+                          £{(r.retirementFV || 0).toLocaleString()}
+                        </div>
+                        <div className="label">ISA</div>
+                        <div className="value">
+                          £{(r.isaFV || 0).toLocaleString()}
+                        </div>
+                        <div className="label">SIPP</div>
+                        <div className="value">
+                          £{(r.sippFV || 0).toLocaleString()}
+                        </div>
+                      </div>
+                      <div className="total">
+                        <div className="label">Total</div>
+                        <div className="value">
+                          £{(r.total || 0).toLocaleString()}
+                        </div>
+                      </div>
+                      {r.monthlyExpense > 0 && r.expenseYears > 0 && (
+                        <>
+                          <div className="extra-expense-row">
+                            <span>
+                              Retirement expense needed
+                              <br />
+                              (£{Money({ value: r.monthlyExpense })} × 12 ×{" "}
+                              {r.expenseYears} years)
+                            </span>
+                            <span>
+                              £{Money({ value: r.totalRetirementExpense })}
+                            </span>
+                          </div>
+                          <div className="extra-expense-row">
+                            <span>
+                              {r.leftOver >= 0 ? "Left over" : "Shortfall"}
+                            </span>
+                            <span
+                              className={
+                                r.leftOver >= 0
+                                  ? "leftover-positive"
+                                  : "leftover-negative"
+                              }
+                            >
+                              £{Money({ value: r.leftOver })}
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {showExpenseHighlight && (
+              <div className="retirement-expense-highlights">
+                <div className="expense-row">
+                  <span className="expense-label">
+                    Retirement expense needed
+                  </span>
+                  <span className="expense-value">
+                    £{(best.totalRetirementExpense || 0).toLocaleString()}
+                  </span>
+                </div>
+                <div className="expense-row">
+                  <span className="leftover-label">
+                    {best.leftOver >= 0 ? "Left over" : "Shortfall"}
+                  </span>
+                  <span
+                    className={`leftover-value ${
+                      best.leftOver >= 0
+                        ? "leftover-positive"
+                        : "leftover-negative"
+                    }`}
+                  >
+                    £
+                    {Math.abs(best.leftOver || 0).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
               </div>
             )}
-          </div>
+          </>
         );
       }
 
@@ -610,10 +765,21 @@
               isaFV: ar.isaFV + br.isaFV,
               sippFV: ar.sippFV + br.sippFV,
               total: ar.total + br.total,
+              totalRetirementExpense:
+                ar.totalRetirementExpense + br.totalRetirementExpense,
+              leftOver: ar.leftOver + br.leftOver,
             };
           });
           setCombined({ years: `${a.years} / ${b.years}`, results: summed });
         }
+
+        // For combined highlight: show only if both p1 and p2 have valid entries and both results exist
+        const showCombinedHighlight =
+          combined &&
+          combined.results &&
+          combined.results.length === 3 &&
+          (combined.results[2].totalRetirementExpense > 0 ||
+            combined.results[2].leftOver !== undefined);
 
         return (
           <div className="layout">
@@ -626,7 +792,7 @@
                 results={res1}
               />
 
-              <div style={{ marginTop: 16 }} className="card">
+              <div style={{ marginTop: 12 }} className="card">
                 <h3 style={{ margin: 0 }}>Partner</h3>
                 <div className="checkbox-inline">
                   <input
@@ -645,11 +811,11 @@
                 </div>
 
                 {!hasPartner ? (
-                  <p className="muted" style={{ marginTop: 12 }}>
+                  <p className="muted" style={{ marginTop: 8 }}>
                     Partner not added. Toggle the checkbox to add a partner.
                   </p>
                 ) : (
-                  <div style={{ marginTop: 12 }}>
+                  <div style={{ marginTop: 8 }}>
                     <PersonForm
                       title="Person 2"
                       person={person2}
@@ -666,7 +832,7 @@
               <div className="card">
                 <h3 style={{ margin: 0 }}>Totals</h3>
 
-                <div className="row" style={{ marginTop: 12 }}>
+                <div className="row" style={{ marginTop: 8 }}>
                   <button onClick={totalBoth} disabled={!hasPartner}>
                     Total Both People
                   </button>
@@ -686,74 +852,120 @@
                 </div>
 
                 {!hasPartner && (
-                  <p className="muted" style={{ marginTop: 12 }}>
+                  <p className="muted" style={{ marginTop: 8 }}>
                     Add partner to enable the combined total.
                   </p>
                 )}
 
-                {/* NEW: vertical presentation instead of table */}
                 {combined && (
-                  <div className="combined-list" aria-live="polite">
-                    <div style={{ fontSize: 13, color: "var(--muted)" }}>
-                      Combined totals{" "}
-                      <span style={{ color: "var(--muted)", fontWeight: 600 }}>
-                        ({combined.years})
-                      </span>
+                  <>
+                    <div className="combined-list" aria-live="polite">
+                      <div style={{ fontSize: 12, color: "var(--muted)" }}>
+                        Combined totals{" "}
+                        <span
+                          style={{ color: "var(--muted)", fontWeight: 600 }}
+                        >
+                          ({combined.years})
+                        </span>
+                      </div>
+
+                      {combined.results.map((r) => (
+                        <div className="combined-item" key={r.rate}>
+                          <div className="rate">
+                            {(r.rate * 100).toFixed(0)}% projection
+                          </div>
+                          <div className="row-grid" style={{ marginBottom: 2 }}>
+                            <div className="label">Retirement</div>
+                            <div className="value">
+                              £{(r.retirementFV || 0).toLocaleString()}
+                            </div>
+                            <div className="label">ISA</div>
+                            <div className="value">
+                              £{(r.isaFV || 0).toLocaleString()}
+                            </div>
+                            <div className="label">SIPP</div>
+                            <div className="value">
+                              £{(r.sippFV || 0).toLocaleString()}
+                            </div>
+                          </div>
+                          <div className="total-value">
+                            <div className="label">Total</div>
+                            <div className="value total-value-number">
+                              £{(r.total || 0).toLocaleString()}
+                            </div>
+                          </div>
+                          {r.totalRetirementExpense > 0 && (
+                            <div className="extra-expense-row">
+                              <span>Combined retirement expense needed</span>
+                              <span>
+                                £
+                                {(
+                                  r.totalRetirementExpense || 0
+                                ).toLocaleString()}
+                              </span>
+                            </div>
+                          )}
+                          {r.totalRetirementExpense > 0 && (
+                            <div className="extra-expense-row">
+                              <span>
+                                {r.leftOver >= 0 ? "Left over" : "Shortfall"}
+                              </span>
+                              <span
+                                className={
+                                  r.leftOver >= 0
+                                    ? "leftover-positive"
+                                    : "leftover-negative"
+                                }
+                              >
+                                £
+                                {(r.leftOver || 0).toLocaleString(undefined, {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 2,
+                                })}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
-
-                    {combined.results.map((r) => (
-                      <div className="combined-item" key={r.rate}>
-                        <div className="rate">
-                          {(r.rate * 100).toFixed(0)}% projection
+                    {showCombinedHighlight && (
+                      <div className="retirement-expense-highlights">
+                        <div className="expense-row">
+                          <span className="expense-label">
+                            Combined retirement expense needed
+                          </span>
+                          <span className="expense-value">
+                            £
+                            {(
+                              combined.results[2].totalRetirementExpense || 0
+                            ).toLocaleString()}
+                          </span>
                         </div>
-
-                        <div className="row-grid" style={{ marginBottom: 4 }}>
-                          <div className="label">Retirement</div>
-                          <div className="value">
-                            £{(r.retirementFV || 0).toLocaleString()}
-                          </div>
-
-                          <div className="label">ISA</div>
-                          <div className="value">
-                            £{(r.isaFV || 0).toLocaleString()}
-                          </div>
-
-                          <div className="label">SIPP</div>
-                          <div className="value">
-                            £{(r.sippFV || 0).toLocaleString()}
-                          </div>
-                        </div>
-
-                        <div className="total-value">
-                          <div className="label">Total</div>
-                          <div className="value total-value-number">
-                            £{(r.total || 0).toLocaleString()}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                    <div className="summary" style={{ marginTop: 6 }}>
-                      <div className="stat">
-                        <div className="label">Best (8%)</div>
-                        <div className="value">
-                          £{(combined.results[2].total || 0).toLocaleString()}
+                        <div className="expense-row">
+                          <span className="leftover-label">
+                            {combined.results[2].leftOver >= 0
+                              ? "Left over"
+                              : "Shortfall"}
+                          </span>
+                          <span
+                            className={`leftover-value ${
+                              combined.results[2].leftOver >= 0
+                                ? "leftover-positive"
+                                : "leftover-negative"
+                            }`}
+                          >
+                            £
+                            {Math.abs(
+                              combined.results[2].leftOver || 0
+                            ).toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </span>
                         </div>
                       </div>
-                      <div className="stat">
-                        <div className="label">Mid (6%)</div>
-                        <div className="value">
-                          £{(combined.results[1].total || 0).toLocaleString()}
-                        </div>
-                      </div>
-                      <div className="stat">
-                        <div className="label">Conservative (4%)</div>
-                        <div className="value">
-                          £{(combined.results[0].total || 0).toLocaleString()}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    )}
+                  </>
                 )}
               </div>
             </aside>
