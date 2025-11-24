@@ -78,24 +78,28 @@
         padding: 10px;
         box-shadow: 0 2px 5px rgba(16, 24, 40, 0.03);
       }
-      .form-row {
+      /* VERTICAL FORM OVERRIDES */
+      .form-row,
+      .form-row.compact {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 2px;
+        margin-bottom: 14px;
         display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 6px;
-        margin-bottom: 2px;
       }
       .form-row .label {
-        min-width: 100px;
-        font-size: 12px;
-        color: var(--muted);
-        padding-right: 3px;
+        min-width: unset;
+        font-size: 13px;
+        margin-bottom: 3px;
+        padding-right: 0;
       }
       .form-row .control {
-        flex: 1;
+        width: 100%;
+        flex: unset;
       }
-      .form-row.compact .label {
-        min-width: 80px;
+      .form-row input,
+      .form-row select {
+        margin-bottom: 8px;
       }
       input[type="number"],
       input[type="text"],
@@ -117,6 +121,17 @@
         margin-bottom: 4px;
         font-size: 12px;
         color: var(--muted);
+      }
+      .bold-note {
+        margin: 8px 0 12px 0;
+        font-weight: bold;
+        color: #b25c19;
+        background: #fff7ea;
+        border-left: 4px solid #f08a24;
+        padding: 10px 14px;
+        font-size: 15px;
+        border-radius: 6px;
+        line-height: 1.6;
       }
       .small {
         font-size: 12px;
@@ -275,7 +290,6 @@
         color: #c92a2a;
         font-weight: bold;
       }
-      /* Custom style for highlights after combined-list, after each person section */
       .retirement-expense-highlights {
         margin-top: 16px;
         margin-bottom: 2px;
@@ -428,6 +442,21 @@
         sipp: { initial: "", annual: "" },
       };
 
+      // --- BOLD STATE PENSION NOTE CONTENT: update here as needed ---
+      const StatePensionNote = () => (
+        <div className="bold-note">
+          From age 67, you may receive the UK State Pension.
+          <br />
+          The full pension is £230.25/week (April 2025–March 2026).
+          <br />
+          You need at least 10 qualifying years to get anything, and 35 years
+          for the full amount. Less than 35 years gives a proportionally reduced
+          pension.
+          <br />
+          The State Pension age is currently 66 (as of 2025).
+        </div>
+      );
+
       function PersonForm({ title, person, onChange, onCalculate, results }) {
         const setField = (path, value) => {
           const next = JSON.parse(JSON.stringify(person));
@@ -529,6 +558,8 @@
                   />
                 </div>
               </div>
+              {/* State Pension Note - Inserted directly below Retirement Expense */}
+              <StatePensionNote />
 
               <h4 className="small">Retirement</h4>
               <div className="form-row compact">
