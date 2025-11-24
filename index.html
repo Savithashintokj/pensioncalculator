@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Retirement + Partner Calculator</title>
+    <title>Pension Calculator</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
       :root {
@@ -120,7 +120,7 @@
         margin-top: 10px;
         margin-bottom: 4px;
         font-size: 12px;
-        color: var(--muted);
+        color: #b25c19;
       }
       .bold-note {
         margin: 8px 0 12px 0;
@@ -445,15 +445,20 @@
       // --- BOLD STATE PENSION NOTE CONTENT: update here as needed ---
       const StatePensionNote = () => (
         <div className="bold-note">
-          From age 67, you may receive the UK State Pension.
-          <br />
-          The full pension is £230.25/week (April 2025–March 2026).
-          <br />
-          You need at least 10 qualifying years to get anything, and 35 years
-          for the full amount. Less than 35 years gives a proportionally reduced
-          pension.
-          <br />
-          The State Pension age is currently 66 (as of 2025).
+          <ul>
+            <li>From age 67, you may receive the UK State Pension.</li>
+
+            <li>The full pension is £230.25/week (April 2025–March 2026).</li>
+
+            <li>
+              {" "}
+              You need at least 10 qualifying years to get anything, and 35
+              years for the full amount. Less than 35 years gives a
+              proportionally reduced pension.
+            </li>
+
+            <li>The State Pension age is currently 66 (as of 2025).</li>
+          </ul>
         </div>
       );
 
@@ -492,34 +497,61 @@
               <h3 style={{ margin: 0 }}>{title}</h3>
 
               <div className="form-row">
-                <div className="label">Current age</div>
-                <div className="control" style={{ maxWidth: 80 }}>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="45"
-                    value={person.currentAge}
-                    onChange={(e) => setField("currentAge", e.target.value)}
-                  />
+                <table>
+                  <tr>
+                    <td>
+                      {" "}
+                      <div className="label">Current age</div>
+                    </td>
+                    <td>
+                      {" "}
+                      <div className="control" style={{ maxWidth: 80 }}>
+                        <input
+                          type="number"
+                          min="0"
+                          placeholder="45"
+                          value={person.currentAge}
+                          onChange={(e) =>
+                            setField("currentAge", e.target.value)
+                          }
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div className="label">Retirement age</div>
+                    </td>
+
+                    <td>
+                      {" "}
+                      <div className="control" style={{ maxWidth: 80 }}>
+                        <input
+                          type="number"
+                          min={toNum(person.currentAge) + 1}
+                          placeholder="65"
+                          value={person.retirementAge}
+                          onChange={(e) =>
+                            setField("retirementAge", e.target.value)
+                          }
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+                <div>
+                  {showYears && (
+                    <span className="small" style={{ paddingLeft: 12 }}>
+                      <h4 className="small">
+                        Years:
+                        <b>
+                          {toNum(person.retirementAge) -
+                            toNum(person.currentAge)}
+                        </b>{" "}
+                      </h4>
+                    </span>
+                  )}
                 </div>
-                <div className="label">Retirement age</div>
-                <div className="control" style={{ maxWidth: 80 }}>
-                  <input
-                    type="number"
-                    min={toNum(person.currentAge) + 1}
-                    placeholder="65"
-                    value={person.retirementAge}
-                    onChange={(e) => setField("retirementAge", e.target.value)}
-                  />
-                </div>
-                {showYears && (
-                  <span className="small muted" style={{ paddingLeft: 12 }}>
-                    Years:{" "}
-                    <b>
-                      {toNum(person.retirementAge) - toNum(person.currentAge)}
-                    </b>
-                  </span>
-                )}
               </div>
 
               {!showYears && person.currentAge && person.retirementAge && (
@@ -531,38 +563,8 @@
                 </div>
               )}
 
-              <h4 className="small">Retirement Expense</h4>
-              <div className="form-row compact">
-                <div className="label">Monthly expected expense</div>
-                <div className="control">
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    placeholder="1200"
-                    value={person.retirementMonthlyExpense}
-                    onChange={(e) =>
-                      setField("retirementMonthlyExpense", e.target.value)
-                    }
-                  />
-                </div>
-                <div className="label">No. of years</div>
-                <div className="control">
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="25"
-                    value={person.retirementExpenseYears}
-                    onChange={(e) =>
-                      setField("retirementExpenseYears", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-              {/* State Pension Note - Inserted directly below Retirement Expense */}
-              <StatePensionNote />
-
               <h4 className="small">Retirement</h4>
-              <div className="form-row compact">
+              <div className="form-row compact card">
                 <div className="label">Current balance</div>
                 <div className="control">
                   <input
@@ -590,7 +592,7 @@
               </div>
 
               <h4 className="small">ISA</h4>
-              <div className="form-row compact">
+              <div className="form-row compact card">
                 <div className="label">Current balance</div>
                 <div className="control">
                   <input
@@ -614,7 +616,7 @@
               </div>
 
               <h4 className="small">SIPP</h4>
-              <div className="form-row compact">
+              <div className="form-row compact card">
                 <div className="label">Current balance</div>
                 <div className="control">
                   <input
@@ -634,6 +636,37 @@
                     value={person.sipp.annual}
                     onChange={(e) => setField("sipp.annual", e.target.value)}
                   />
+                </div>
+
+                <h4 className="small">Retirement Expense</h4>
+                <div className="form-row compact card">
+                  <div className="label">Monthly expected expense</div>
+                  <div className="control">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="1200"
+                      value={person.retirementMonthlyExpense}
+                      onChange={(e) =>
+                        setField("retirementMonthlyExpense", e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="label">No. of years</div>
+                  <div className="control">
+                    <input
+                      type="number"
+                      min="1"
+                      placeholder="25"
+                      value={person.retirementExpenseYears}
+                      onChange={(e) =>
+                        setField("retirementExpenseYears", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  {/* State Pension Note - Inserted directly below Retirement Expense */}
+                  <StatePensionNote />
                 </div>
               </div>
 
