@@ -379,6 +379,49 @@ aside > .card {
   margin: 28px auto;
   padding: 12px;
 }
+.toggle-btn {
+  display: block;
+  background: #0073e6;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  margin: 0 auto 6px auto; /* center horizontally, keep bottom margin */
+  border-radius: 4px;
+  width: fit-content; /* shrink to content width */
+}
+
+.collapsed-content.collapsed {
+  display: none;
+}
+
+.collapsed-content {
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 10px;
+  background: #f9f9f9;
+  border-left: 3px solid #0073e6;
+  margin-bottom: 12px;
+}
+.collapsed-content {
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 10px;
+  background: #f9f9f9;
+  border-left: 3px solid #0073e6;
+  margin-bottom: 12px;
+
+  /* Add these lines: */
+  text-align: center; /* Centers text inside the container */
+  margin-left: auto; /* Centers the container horizontally */
+  margin-right: auto;
+}
+.collapsed-content {
+  max-width: 900px; /* or whatever max width you want */
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 
 /* mobile responsive */
 @media (max-width: 600px) {
